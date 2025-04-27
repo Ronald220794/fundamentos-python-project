@@ -17,14 +17,23 @@ class Cart:
         product = get_product(code)
         return True, f"✔ {product['name']} (x{quantity}) added to cart"
     
-    def remove_form_cart(self, code:str, quantity:int = None) -> Tuple[bool, str]:
+    def remove_cart(self, code:str, quantity:int = None) -> Tuple[bool, str]:
         if code not in self.items:
             return False, "Product isn't in the Cart"
         
-        if quantity is None or quantity >= self.items[code]:
+        elif quantity is None or quantity >= self.items[code]:
             del self.items[code]
             product = get_product(code)
-            return True, f"Product {product['name']} removed from cart"        
+            return True, f"Product {product['name']} removed from cart"
+        
+        elif quantity <= 0:
+            return False, "The quantity must be greater than zero"
+        
+        else:
+            self.items[code] -= quantity
+            product = get_product(code)
+            return True, f"The cuantity of the {product['name']} was reduced by {quantity} unit(s)"
+              
     
     def get_cart (self) -> List[Dict[str, float]]:
         content = []
